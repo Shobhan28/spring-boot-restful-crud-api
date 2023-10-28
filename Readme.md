@@ -48,15 +48,15 @@ The app will start running at <http://localhost:8080>.
 
 The app defines following CRUD APIs.
 
-    GET /api/notes
+    GET /api/getnotes
     
-    POST /api/notes
+    POST /api/createnotes
     
-    GET /api/notes/{noteId}
+    GET /api/getnotesby/{noteId}
     
-    PUT /api/notes/{noteId}
+    PUT /api/updatenotes/{noteId}
     
-    DELETE /api/notes/{noteId}
+    DELETE /api/deletenotes/{noteId}
 
 You can test them using postman or any other rest client.
 
