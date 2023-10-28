@@ -1,9 +1,10 @@
 package com.example.easynotes.controller;
 
+import com.example.easynotes.entity.Note;
 import com.example.easynotes.exception.ResourceNotFoundException;
-import com.example.easynotes.model.Note;
 import com.example.easynotes.repository.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,25 +21,30 @@ public class NoteController {
     @Autowired
     NoteRepository noteRepository;
 
-    @GetMapping("/notes")
-    public List<Note> getAllNotes() {
-        return noteRepository.findAll();
-    }
-
-    @PostMapping("/notes")
+ //   http://localhost:8080/api/createnotes
+    @PostMapping("/createnotes")
     public Note createNote(@Valid @RequestBody Note note) {
         return noteRepository.save(note);
     }
+    
+    //   http://localhost:8080/api/getnotes
+        @GetMapping("/getnotes")
+        public List<Note> getAllNotes() {
+            return noteRepository.findAll();
+        }
 
-    @GetMapping("/notes/{id}")
+
+//   http://localhost:8080/api/getnotes/id
+    @GetMapping("/getnotesby/{id}")
     public Note getNoteById(@PathVariable(value = "id") Long noteId) {
         return noteRepository.findById(noteId)
                 .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteId));
     }
 
-    @PutMapping("/notes/{id}")
-    public Note updateNote(@PathVariable(value = "id") Long noteId,
-                                           @Valid @RequestBody Note noteDetails) {
+
+    //   http://localhost:8080/api/updatenotes/id
+    @PutMapping("/updatenotes/{id}")
+    public Note updateNote(@PathVariable(value = "id") Long noteId, @Valid @RequestBody Note noteDetails) {
 
         Note note = noteRepository.findById(noteId)
                 .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteId));
@@ -50,13 +56,15 @@ public class NoteController {
         return updatedNote;
     }
 
-    @DeleteMapping("/notes/{id}")
+
+//    http://localhost:8080/api/deletenotes/id
+    @DeleteMapping("/deletenotes/{id}")
     public ResponseEntity<?> deleteNote(@PathVariable(value = "id") Long noteId) {
         Note note = noteRepository.findById(noteId)
                 .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteId));
 
         noteRepository.delete(note);
 
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(note, HttpStatus.OK);
     }
 }
